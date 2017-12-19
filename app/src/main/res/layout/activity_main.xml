@@ -20,20 +20,20 @@
 
         <include
             android:id="@+id/frag_interactive"
-            layout="@layout/fragment_interactive"
+            layout="@layout/content_interactive"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <include
             android:id="@+id/frag_editor"
-            layout="@layout/fragment_editor"
+            layout="@layout/content_editor"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="invisible" />
 
         <include
             android:id="@+id/frag_about"
-            layout="@layout/fragment_about"
+            layout="@layout/content_about"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="invisible" />

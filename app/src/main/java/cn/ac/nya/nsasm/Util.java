@@ -116,12 +116,14 @@ public class Util {
         return var;
     }
 
+    /** NOTE: Android's Scanner is different from PC's, it checks \f, so we try to use ETB (end of trans. block) **/
+
     public static String encodeLambda(String var) {
-        return var.replace("\n", "\f");
+        return var.replace("\n", "\027");
     }
 
     public static String decodeLambda(String var) {
-        return var.replace("\f", "\n");
+        return var.replace("\027", "\n");
     }
 
     public static String formatString(String var) {
