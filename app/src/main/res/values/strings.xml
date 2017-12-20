@@ -7,4 +7,5 @@
     <string name="btn_run">Run</string>
     <string name="input_title">Input</string>
     <string name="input_msg">Input value</string>
+    <string name="btn_tab">Tab</string>
 </resources>

@@ -9,6 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -176,12 +179,67 @@ public class MainActivity extends AppCompatActivity {
         mNavigation = (BottomNavigationView) findViewById(R.id.navigation);
         mNavigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        EditText text = (EditText) mEditorView.findViewById(R.id.textEditor);
-        text.setTypeface(font);
-        Button button = (Button) mEditorView.findViewById(R.id.buttonRun);
-        button.setOnClickListener((view) -> {
+        EditText editor = (EditText) mEditorView.findViewById(R.id.textEditor);
+        editor.setTypeface(font);
+        editor.setOnKeyListener((view, i, keyEvent) -> {
+            int pos = editor.getSelectionStart();
+            switch (keyEvent.getNumber()) {
+                case '(': editor.getText().insert(pos, ")"); break;
+                case '<': editor.getText().insert(pos, ">"); break;
+                case '{': editor.getText().insert(pos, "}"); break;
+                case '[': editor.getText().insert(pos, "]"); break;
+            }
+            editor.setSelection(pos);
+
+            return false;
+        });
+        editor.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (i < charSequence.length()) {
+                    int pos = editor.getSelectionStart(); char c = charSequence.charAt(i);
+                    if (c == '\n' && pos != i) {
+                        int start, end;
+                        for (start = i - 1; start >= 0; start--) {
+                            if (charSequence.charAt(start) == '\n')
+                                break;
+                        }
+                        for (end = start + 1; end < pos; end++) {
+                            if (charSequence.charAt(end) != ' ')
+                                break;
+                        }
+                        String indent = "";
+                        for (int k = 0; k < end - start - 1; k++) indent = indent.concat(" ");
+                        editor.getText().insert(pos, indent);
+                    } else {
+                        switch (c) {
+                            case '(': editor.getText().insert(pos, ")"); break;
+                            case '<': editor.getText().insert(pos, ">"); break;
+                            case '{': editor.getText().insert(pos, "}"); break;
+                            case '[': editor.getText().insert(pos, "]"); break;
+                        }
+                        editor.setSelection(pos);
+                    }
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+            }
+        });
+        Button btnTab = (Button) mEditorView.findViewById(R.id.buttonTab);
+        btnTab.setOnClickListener((view) -> {
+            int pos = editor.getSelectionStart();
+            editor.getText().insert(pos, "    ");
+        });
+        Button btnRun = (Button) mEditorView.findViewById(R.id.buttonRun);
+        btnRun.setOnClickListener((view) -> {
             output.setText("");
-            String str = text.getText().toString();
+            String str = editor.getText().toString();
             if (str.isEmpty()) return;
 
             new Thread(() -> {
