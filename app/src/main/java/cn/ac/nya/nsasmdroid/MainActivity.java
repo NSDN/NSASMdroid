@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.ac.nya.nsasm.NSASM;
@@ -181,18 +182,6 @@ public class MainActivity extends AppCompatActivity {
 
         EditText editor = (EditText) mEditorView.findViewById(R.id.textEditor);
         editor.setTypeface(font);
-        editor.setOnKeyListener((view, i, keyEvent) -> {
-            int pos = editor.getSelectionStart();
-            switch (keyEvent.getNumber()) {
-                case '(': editor.getText().insert(pos, ")"); break;
-                case '<': editor.getText().insert(pos, ">"); break;
-                case '{': editor.getText().insert(pos, "}"); break;
-                case '[': editor.getText().insert(pos, "]"); break;
-            }
-            editor.setSelection(pos);
-
-            return false;
-        });
         editor.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -221,6 +210,8 @@ public class MainActivity extends AppCompatActivity {
                             case '<': editor.getText().insert(pos, ">"); break;
                             case '{': editor.getText().insert(pos, "}"); break;
                             case '[': editor.getText().insert(pos, "]"); break;
+                            case '\'': editor.getText().insert(pos, "\'"); break;
+                            case '\"': editor.getText().insert(pos, "\""); break;
                         }
                         editor.setSelection(pos);
                     }
@@ -258,6 +249,9 @@ public class MainActivity extends AppCompatActivity {
 
             mNavigation.setSelectedItemId(R.id.navigation_home);
         });
+
+        TextView textView = mAboutView.findViewById(R.id.app_ver);
+        textView.setText(NSASM.version);
 
     }
 
