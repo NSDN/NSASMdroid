@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    String buf;
+    String buf; boolean lock = false;
     int lines = 1; NSASM.Result result;
     String[][] code = Util.getSegments("nop\n"); //ld func allowed
     NSASM nsasm = new NSASM(64, 32, 16, code);
@@ -206,6 +206,8 @@ public class MainActivity extends AppCompatActivity {
                         for (int k = 0; k < end - start - 1; k++) indent = indent.concat(" ");
                         editor.getText().insert(pos, indent);
                     } else {
+                        if (!lock) lock = true;
+                        else { lock = false; return; }
                         switch (c) {
                             case '(': editor.getText().insert(pos, ")"); break;
                             case '<': editor.getText().insert(pos, ">"); break;
